@@ -1,0 +1,6 @@
+@import "./test.css";
+
+.App {
+  text-align: center;
+  background: url("./logo.svg");
+}
