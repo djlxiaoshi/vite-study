@@ -1,30 +1,38 @@
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import { defineConfig } from "vite";
-import myPlugin from "./plugins/vite-plugin-test";
-import { name } from "./package.json";
-import path from "path";
-import html from "@web/rollup-plugin-html";
+import usePluginImport from 'vite-plugin-importer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     reactRefresh(),
-    myPlugin(),
-    html({
-      input: "index.html",
+    usePluginImport({
+      libraryName: 'antd', // todo please input your babel-plugin-import config
+      libraryDirectory: "es",
+      style: 'css',
     }),
   ],
   optimizeDeps: {
-    // exclude: ["lodash-es"],
+    exclude: ["lodash-es"],
   },
   build: {
-    lib: {
-      name: `${name}-[name]`,
-      entry: path.resolve(__dirname, "./src/main.tsx"),
-      formats: ["umd"],
-    },
+    target: 'es2015',
+    minify: 'terser', // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用terser
+    manifest: false, // 是否产出maifest.json
+    sourcemap: true, // 是否产出soucemap.json
+    outDir: 'dist', // 产出目录
   },
   server: {
+    force: true,
     port: 4003,
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {},
+      less: {
+        // 支持内联 JavaScript
+        javascriptEnabled: true,
+      },
+    },
   },
 });
